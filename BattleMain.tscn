@@ -1,0 +1,110 @@
+[gd_scene load_steps=9 format=3 uid="uid://b823u1yqb1ukx"]
+
+[ext_resource type="Script" path="res://BattleMain.gd" id="1_f2g0h"]
+[ext_resource type="PackedScene" uid="uid://cr1v8eimho2uc" path="res://Player.tscn" id="1_qve4o"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_47kc7"]
+size = Vector3(32, 0.167, 32)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s3cre"]
+size = Vector3(32, 0.1, 32)
+
+[sub_resource type="BoxMesh" id="BoxMesh_mkbcm"]
+size = Vector3(0.1, 32, 32)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1f8ur"]
+size = Vector3(0.1, 32, 32)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_shqxw"]
+size = Vector3(32, 32, 0.1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_s0kia"]
+size = Vector3(32, 32, 0.1)
+
+[node name="BattleMain" type="Node3D"]
+script = ExtResource("1_f2g0h")
+
+[node name="Player" parent="." instance=ExtResource("1_qve4o")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3837, 8.34686, 0.588161)
+
+[node name="Walls" type="Node3D" parent="."]
+
+[node name="Floor" type="StaticBody3D" parent="Walls"]
+collision_mask = 9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/Floor"]
+mesh = SubResource("BoxMesh_47kc7")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Floor"]
+shape = SubResource("BoxShape3D_s3cre")
+
+[node name="Wall1" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 16, 16, 0)
+collision_mask = 9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/Wall1"]
+mesh = SubResource("BoxMesh_mkbcm")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Wall1"]
+shape = SubResource("BoxShape3D_1f8ur")
+
+[node name="Wall2" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16, 16, 0)
+collision_layer = 9
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/Wall2"]
+mesh = SubResource("BoxMesh_mkbcm")
+skeleton = NodePath("../CollisionShape3D")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Wall2"]
+shape = SubResource("BoxShape3D_1f8ur")
+
+[node name="Wall3" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, -16)
+collision_layer = 9
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Wall3"]
+shape = SubResource("BoxShape3D_shqxw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/Wall3"]
+mesh = SubResource("BoxMesh_s0kia")
+
+[node name="Wall4" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, 16)
+collision_layer = 9
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Wall4"]
+shape = SubResource("BoxShape3D_shqxw")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/Wall4"]
+mesh = SubResource("BoxMesh_s0kia")
+
+[node name="PlayerSpawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="EnemySpawns" type="Node3D" parent="."]
+
+[node name="EnemySpawn1" type="Marker3D" parent="EnemySpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.08263, 13.4582, 5.52653)
+
+[node name="EnemySpawn2" type="Marker3D" parent="EnemySpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.76239, 13.4582, 5.52653)
+
+[node name="EnemySpawn3" type="Marker3D" parent="EnemySpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.76239, 13.4582, -5.41663)
+
+[node name="EnemySpawn4" type="Marker3D" parent="EnemySpawns"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.95382, 13.4582, -5.41663)
+
+[node name="SpawnTimer" type="Timer" parent="."]
+wait_time = 4.0
+autostart = true
+
+[node name="EndGameTimer" type="Timer" parent="."]
+wait_time = 3.0
+
+[connection signal="death" from="Player" to="." method="_on_player_death"]
+[connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
+[connection signal="timeout" from="EndGameTimer" to="." method="_on_end_game_timer_timeout"]

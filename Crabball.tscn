@@ -1,0 +1,25 @@
+[gd_scene load_steps=5 format=3 uid="uid://cr1upuvhpuhua"]
+
+[ext_resource type="Script" path="res://Crabball.gd" id="1_w4xfo"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_xkyvg"]
+radius = 2.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_kytw0"]
+radius = 2.0
+height = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_t3j3s"]
+albedo_color = Color(1, 0.0745098, 0.266667, 1)
+
+[node name="Crabball" type="CharacterBody3D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_w4xfo")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_xkyvg")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_kytw0")
+surface_material_override/0 = SubResource("StandardMaterial3D_t3j3s")
