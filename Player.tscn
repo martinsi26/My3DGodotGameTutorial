@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://cr1v8eimho2uc"]
+[gd_scene load_steps=4 format=3 uid="uid://cr1v8eimho2uc"]
 
 [ext_resource type="Script" path="res://Player.gd" id="1_i1ryg"]
 [ext_resource type="PackedScene" uid="uid://dn4qh4weq6104" path="res://Helper.tscn" id="2_tdkuu"]
@@ -6,9 +6,6 @@
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_15bbk"]
 radius = 0.42264
 height = 2.1
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_xlytb"]
-radius = 2.0
 
 [node name="CharacterBody3D" type="CharacterBody3D"]
 collision_layer = 2
@@ -24,26 +21,6 @@ shape = SubResource("CapsuleShape3D_15bbk")
 [node name="IFrameTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
-
-[node name="FIRST" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.62979, 0)
-cull_mask = 1048567
-
-[node name="ThirdPivot" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.58245, 0)
-
-[node name="SpringArm3D" type="SpringArm3D" parent="ThirdPivot"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.36248, -0.306188, -1.73924)
-collision_mask = 8
-shape = SubResource("SphereShape3D_xlytb")
-spring_length = 3.0
-
-[node name="THIRD" type="Camera3D" parent="ThirdPivot/SpringArm3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.324435, 1.94295, 3.71633)
-
-[node name="CROW" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 18, 0)
-cull_mask = 1048573
 
 [connection signal="dead" from="Helper" to="." method="_on_helper_dead"]
 [connection signal="timeout" from="IFrameTimer" to="." method="_on_i_frame_timer_timeout"]
