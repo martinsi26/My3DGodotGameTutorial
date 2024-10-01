@@ -1,0 +1,7 @@
+enum {
+	STATIC,
+	FIRST,
+	THIRD,
+	CROW,
+	CAMERA	
+}

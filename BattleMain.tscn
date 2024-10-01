@@ -1,7 +1,14 @@
-[gd_scene load_steps=9 format=3 uid="uid://b823u1yqb1ukx"]
+[gd_scene load_steps=12 format=3 uid="uid://b823u1yqb1ukx"]
 
 [ext_resource type="Script" path="res://BattleMain.gd" id="1_f2g0h"]
 [ext_resource type="PackedScene" uid="uid://cr1v8eimho2uc" path="res://Player.tscn" id="1_qve4o"]
+[ext_resource type="PackedScene" uid="uid://bjghexkvb4wfc" path="res://HUD.tscn" id="3_c4ppd"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_w8cvm"]
+size = Vector3(32, 0.1, 32)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_s6x8a"]
+size = Vector3(32, 0.1, 32)
 
 [sub_resource type="BoxMesh" id="BoxMesh_47kc7"]
 size = Vector3(32, 0.167, 32)
@@ -28,6 +35,15 @@ script = ExtResource("1_f2g0h")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.3837, 8.34686, 0.588161)
 
 [node name="Walls" type="Node3D" parent="."]
+
+[node name="Roof" type="StaticBody3D" parent="Walls"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 32, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Walls/Roof"]
+mesh = SubResource("BoxMesh_w8cvm")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Walls/Roof"]
+shape = SubResource("BoxShape3D_s6x8a")
 
 [node name="Floor" type="StaticBody3D" parent="Walls"]
 
@@ -100,6 +116,25 @@ autostart = true
 [node name="EndGameTimer" type="Timer" parent="."]
 wait_time = 3.0
 
+[node name="ScoreTimer" type="Timer" parent="."]
+autostart = true
+
+[node name="STATIC" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 10.2199, 15.7427)
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16.9079, 0)
+light_energy = 8.0
+omni_range = 32.0
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="CanvasLayer" instance=ExtResource("3_c4ppd")]
+
+[node name="CAMERA" type="Camera3D" parent="."]
+transform = Transform3D(-1, -3.27491e-08, 8.1057e-08, 0, 0.927184, 0.374607, -8.74228e-08, 0.374607, -0.927184, 0.520839, 12.2659, -15.5254)
+
 [connection signal="death" from="Player" to="." method="_on_player_death"]
 [connection signal="timeout" from="SpawnTimer" to="." method="_on_spawn_timer_timeout"]
 [connection signal="timeout" from="EndGameTimer" to="." method="_on_end_game_timer_timeout"]
+[connection signal="timeout" from="ScoreTimer" to="." method="_on_score_timer_timeout"]

@@ -2,22 +2,68 @@ extends CharacterBody3D
 
 class_name Player
 
+const CAMERA = preload("res://CameraEnum.gd")
 const SPEED = 15
 const JUMP_VELOCITY = 10
 
 var health = 9
 var iframes =  false
 
+var current_cam = CAMERA.STATIC
+var sens = 0.2
+var cam_can_move = false
 signal death
 
 func _ready():
-	pass
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _input(event: InputEvent) -> void:
+	if cam_can_move:
+		if event is InputEventMouseMotion:
+			rotate_y(deg_to_rad(-event.relative.x*sens))
+			$FIRST.rotate_x(deg_to_rad(-event.relative.y*sens))
+			$ThirdPivot.rotate_x(deg_to_rad(-event.relative.y*sens))
+			
+	
+func _physics_process(delta: float) -> void:
+	match current_cam:
+		CAMERA.STATIC:
+			default_movement(delta)
+		CAMERA.FIRST:
+			cam_movement(delta)
+		CAMERA.THIRD:
+			cam_movement(delta)
+		CAMERA.CROW:
+			default_movement(delta)
+		CAMERA.CAMERA:
+			default_movement(delta)
+	default_movement(delta)
 	
 func _process(delta: float) -> void:
 	if(velocity.x == 0 && velocity.z == 0 && is_on_floor()):
 		$Helper.idle()
 	elif(is_on_floor()):
 		$Helper.run()
+		
+func cam_movement(delta):
+	if not is_on_floor():
+		velocity += get_gravity() * delta
+		
+	if Input.is_action_just_pressed("Jump") and is_on_floor():
+		$Helper.jump()
+		velocity.y = JUMP_VELOCITY
+	
+	var input_dir := Input.get_vector("Move_Left", "Move_Right", "Move_Foward", "Move_Back")
+	var direction := (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized()
+	
+	if direction:
+		velocity.x = direction.x * SPEED
+		velocity.z = direction.z * SPEED
+	else:
+		velocity.x = move_toward(velocity.x,0,SPEED)
+		velocity.z = move_toward(velocity.z,0,SPEED)
+	
+	move_and_slide()
 
 func default_movement(delta):
 	if not is_on_floor():
